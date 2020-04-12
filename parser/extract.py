@@ -5,7 +5,7 @@ import json, re
 
 from parser.amr import AMR
 from parser.AMRGraph import AMRGraph, number_regexp
-from parser.AMRGraph import  _is_abs_form 
+
 class AMRIO:
 
     def __init__(self):
@@ -24,13 +24,11 @@ class AMRIO:
                     tokens = json.loads(line[len('# ::tokens '):])
                 elif line.startswith('# ::lemmas '):
                     lemmas = json.loads(line[len('# ::lemmas '):])
-                    lemmas = [ le if _is_abs_form(le) else le.lower() for le in lemmas]
+                    lemmas = [ le.lower() for le in lemmas]
                 elif line.startswith('# ::pos_tags '):
                     pos_tags = json.loads(line[len('# ::pos_tags '):])
                 elif line.startswith('# ::ner_tags '):
                     ner_tags = json.loads(line[len('# ::ner_tags '):])
-                elif line.startswith('# ::abstract_map '):
-                    abstract_map = json.loads(line[len('# ::abstract_map '):])
                     graph_line = AMR.get_amr_line(f)
                     amr = AMR.parse_AMR_line(graph_line)
                     myamr = AMRGraph(amr)
@@ -122,7 +120,7 @@ if __name__ == "__main__":
             for lc, lm in zip(cp_seq, mp_seq):
                 lexical_concepts.add(lc)
                 lexical_concepts.add(lm)
-            
+
             if i == 0:
                 predictable_conc.append([ c for c in concept if c not in lexical_concepts])
                 conc.append(concept)

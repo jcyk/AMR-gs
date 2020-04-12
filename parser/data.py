@@ -134,7 +134,6 @@ def batchify(data, vocabs, unk_rate=0.):
     out_conc_len, bsz = _concept_out.shape
     _rel = np.full((1+out_conc_len, bsz, out_conc_len), vocabs['rel'].token2idx(PAD))
     # v: [<dummy>, concept_0, ..., concept_l, ..., concept_{n-1}, <end>] u: [<dummy>, concept_0, ..., concept_l, ..., concept_{n-1}]
-    
     for bidx, (x, y) in enumerate(zip(edge, concept)):
         for l, _ in enumerate(y):
             if l > 0:
@@ -173,7 +172,6 @@ class DataLoader(object):
                 bert_token, token_subword_index = bert_tokenizer.tokenize(token)
                 datum['bert_token'] = bert_token
                 datum['token_subword_index'] = token_subword_index
-
 
             self.data.append(datum)
         print ("Get %d AMRs from %s"%(len(self.data), filename))

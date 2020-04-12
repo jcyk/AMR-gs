@@ -30,6 +30,7 @@ class Parser(nn.Module):
                                           cnn_filters, char2concept_dim, dropout, pretrained_file)
         self.snt_encoder = Transformer(snt_layers, embed_dim, ff_embed_dim, num_heads, dropout)
         self.graph_encoder = Transformer(graph_layers, embed_dim, ff_embed_dim, num_heads, dropout, with_external=True, weights_dropout=False)
+
         self.embed_dim = embed_dim
         self.embed_scale = math.sqrt(embed_dim)
         self.embed_positions = SinusoidalPositionalEmbedding(embed_dim, device=device)
@@ -181,21 +182,23 @@ class Parser(nn.Module):
         #concept_repr = self.graph_encoder(concept_repr,
         #                          self_padding_mask=concept_mask, self_attn_mask=attn_mask,
         #                          external_memories=word_repr, external_padding_mask=word_mask)
+        
         for idx, layer in enumerate(self.graph_encoder.layers):
             concept_repr, arc_weight, _ = layer(concept_repr,
                                   self_padding_mask=concept_mask, self_attn_mask=attn_mask,
                                   external_memories=word_repr, external_padding_mask=word_mask,
                                   need_weights ='max')
-
         graph_target_rel = data['rel'][:-1]
         graph_target_arc = torch.ne(graph_target_rel, self.vocabs['rel'].token2idx(NIL)) # 0 or 1
         graph_arc_mask = torch.eq(graph_target_rel, self.vocabs['rel'].token2idx(PAD)) 
         graph_arc_loss = F.binary_cross_entropy(arc_weight, graph_target_arc.float(), reduction='none')
         graph_arc_loss = graph_arc_loss.masked_fill_(graph_arc_mask, 0.).sum((0, 2))
-
+        
+        
         probe = probe.expand_as(concept_repr) # tgt_len x bsz x embed_dim
         concept_loss, arc_loss, rel_loss = self.decoder(probe, word_repr, concept_repr, word_mask, concept_mask, attn_mask, \
          data['copy_seq'], target=data['concept_out'], target_rel=data['rel'][1:])
+
 
         concept_tot = concept_mask.size(0) - concept_mask.float().sum(0)
         concept_loss = concept_loss / concept_tot

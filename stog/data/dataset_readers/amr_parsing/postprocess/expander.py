@@ -70,6 +70,7 @@ class Expander:
         self.print_stats()
 
     def expand_graph(self, amr):
+        return
         self.restore_polarity(amr)
         graph = amr.graph
         abstract_map = amr.abstract_map

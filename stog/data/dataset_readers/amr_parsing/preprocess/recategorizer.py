@@ -171,16 +171,16 @@ class Recategorizer:
     def recategorize_graph(self, amr):
         amr.stems = [self.stemmer(l) for l in amr.lemmas]
         self.resolve_name_node_reentrancy(amr)
-        self.recategorize_name_nodes(amr)
+        #self.recategorize_name_nodes(amr)
         if self.build_utils:
             return
         self.remove_wiki(amr)
-        self.remove_negation(amr)
-        self.recategorize_date_nodes(amr)
-        self.recategorize_score_nodes(amr)
-        self.recategorize_ordinal_nodes(amr)
-        self.recategorize_quantities(amr)
-        self.recategorize_urls(amr)
+        #self.remove_negation(amr)
+        #self.recategorize_date_nodes(amr)
+        #self.recategorize_score_nodes(amr)
+        #self.recategorize_ordinal_nodes(amr)
+        #self.recategorize_quantities(amr)
+        #self.recategorize_urls(amr)
 
     def resolve_name_node_reentrancy(self, amr):
         graph = amr.graph

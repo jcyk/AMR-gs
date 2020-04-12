@@ -1,6 +1,6 @@
 import torch
 from parser.data import END, UNK
-from parser.AMRGraph import is_attr_or_abs_form
+from parser.AMRGraph import _is_attr_form
 """
  Beam search by batch
  need model has two functions:
@@ -52,7 +52,7 @@ class Beam(object):
         token, score = step
         prefix = prev_hyp.seq
 
-        if len(prefix) == 1 and is_attr_or_abs_form(token):
+        if len(prefix) == 1 and _is_attr_form(token):
             return float('-inf')
         if not token.endswith('_') and (':' in token or '/' in token or ',' in token):
             return float('-inf')

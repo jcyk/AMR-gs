@@ -3,8 +3,7 @@ import re
 import networkx as nx
 import numpy as np
 
-from parser.AMRGraph import is_attr_or_abs_form, need_an_instance
-
+from parser.AMRGraph import _is_attr_form, need_an_instance
 
 class PostProcessor(object):
     def __init__(self, rel_vocab):
@@ -39,10 +38,10 @@ class PostProcessor(object):
             max_p, max_j, max_r = 0., 0, None
             for j, p, r in grouped_relation[i]:
                 assert j < i
-                if is_attr_or_abs_form(res_concept[j]):
+                if _is_attr_form(res_concept[j]):
                     continue
                 if p >=0.5:
-                    if not is_attr_or_abs_form(res_concept[i]):
+                    if not _is_attr_form(res_concept[i]):
                         if r.endswith('_reverse_'):
                             ret.append((names[i], r[:-9], names[j]))
                         else:
@@ -52,7 +51,7 @@ class PostProcessor(object):
                     max_j = j
                     max_r = r
 
-            if max_p < 0.5 or is_attr_or_abs_form(res_concept[i]):
+            if max_p < 0.5 or _is_attr_form(res_concept[i]):
                 if max_r.endswith('_reverse_'):
                     ret.append((names[i], max_r[:-9], names[max_j]))
                 else:

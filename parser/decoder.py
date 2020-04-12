@@ -2,10 +2,10 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.nn import Parameter
+
 from parser.data import NIL, PAD
 from parser.utils import compute_f_by_tensor
 from parser.transformer import MultiheadAttention, Transformer, TiedTransformer
-
 from parser.utils import label_smoothed_nll_loss
 
 class ArcGenerator(nn.Module):

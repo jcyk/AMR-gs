@@ -2,11 +2,11 @@
 
 set -e
 
-############### AMR v1.0 ################
-# Directory where intermediate utils will be saved to speed up processing.
+# ############### AMR v1.0 ################
+# # Directory where intermediate utils will be saved to speed up processing.
 util_dir=data/AMR/amr_1.0_utils
-#
-# # AMR data with **features**
+
+# AMR data with **features**
 data_dir=data/AMR/amr_1.0
 train_data=${data_dir}/train.txt.features
 dev_data=${data_dir}/dev.txt.features
@@ -19,13 +19,13 @@ python -u -m stog.data.dataset_readers.amr_parsing.preprocess.input_cleaner \
     --amr_files ${train_data} ${dev_data} ${test_data}
 printf "Done.`date`\n\n"
 
-printf "Recategorizing subgraphs...`date`\n"
+printf "Recategorizing subgraphs...(hey in fact, no one is recategorized, I am just too lazy to change the basic flow)`date`\n"
 python -u -m stog.data.dataset_readers.amr_parsing.preprocess.recategorizer \
     --dump_dir ${util_dir} \
     --amr_files ${train_data}.input_clean ${dev_data}.input_clean
-python -u -m stog.data.dataset_readers.amr_parsing.preprocess.text_anonymizor \
-    --amr_file ${test_data}.input_clean \
-    --util_dir ${util_dir}
+# python -u -m stog.data.dataset_readers.amr_parsing.preprocess.text_anonymizor \
+#     --amr_file ${test_data}.input_clean \
+#     --util_dir ${util_dir}
 printf "Done.`date`\n\n"
 
 printf "Removing senses...`date`\n"
@@ -33,11 +33,11 @@ python -u -m stog.data.dataset_readers.amr_parsing.preprocess.sense_remover \
     --util_dir ${util_dir} \
     --amr_files ${train_data}.input_clean.recategorize \
     ${dev_data}.input_clean.recategorize \
-    ${test_data}.input_clean.recategorize
+    ${test_data}.input_clean
 printf "Done.`date`\n\n"
 
 printf "Renaming preprocessed files...`date`\n"
-mv ${test_data}.input_clean.recategorize.nosense ${test_data}.preproc
+mv ${test_data}.input_clean.nosense ${test_data}.preproc
 mv ${train_data}.input_clean.recategorize.nosense ${train_data}.preproc
 mv ${dev_data}.input_clean.recategorize.nosense ${dev_data}.preproc
 rm ${data_dir}/*.input_clean*

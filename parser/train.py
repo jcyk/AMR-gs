@@ -117,6 +117,7 @@ def load_vocabs(args):
 
 def main(local_rank, args):
     vocabs, lexical_mapping = load_vocabs(args)
+    
     bert_encoder = None
     if args.with_bert:
         bert_encoder = BertEncoder.from_pretrained(args.bert_path)
@@ -167,28 +168,26 @@ def main(local_rank, args):
         batches_acm = ckpt['batches_acm']
         del ckpt
 
-
     train_data = DataLoader(vocabs, lexical_mapping, args.train_data, args.train_batch_size, for_train=True)
     train_data.set_unk_rate(args.unk_rate)
     queue = mp.Queue(10)
     train_data_generator = mp.Process(target=data_proc, args=(train_data, queue))
-    
     train_data_generator.start()
     model.train()
     epoch, loss_avg, concept_loss_avg, arc_loss_avg, rel_loss_avg = 0, 0, 0, 0, 0
     while True:
-        batch = queue.get() 
+        batch = queue.get()
         if isinstance(batch, str):
             epoch += 1
             print ('epoch', epoch, 'done', 'batches', batches_acm)
-        else: 
+        else:
             batch = move_to_device(batch, model.device)
             concept_loss, arc_loss, rel_loss, graph_arc_loss = model(batch)
             loss = (concept_loss + arc_loss + rel_loss) / args.batches_per_update
             loss_value = loss.item()
             concept_loss_value = concept_loss.item()
             arc_loss_value = arc_loss.item()
-            rel_loss_value = rel_loss.item() 
+            rel_loss_value = rel_loss.item()
             loss_avg = loss_value * args.batches_per_update * 0.8 + 0.2 * loss_value
             concept_loss_avg = concept_loss_value * 0.8 + 0.2 * concept_loss_value
             arc_loss_avg = arc_loss_value * 0.8 + 0.2 * arc_loss_value
@@ -230,7 +229,8 @@ if __name__ == "__main__":
     if not os.path.exists(args.ckpt):
         os.mkdir(args.ckpt)
     assert len(args.cnn_filters)%2 == 0
-    args.cnn_filters = list(zip(args.cnn_filters[:-1:2], args.cnn_filters[1::2]))    
+    args.cnn_filters = list(zip(args.cnn_filters[:-1:2], args.cnn_filters[1::2]))
+
     if args.world_size == 1:
         main(0, args)
         exit(0)

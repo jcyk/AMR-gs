@@ -3,20 +3,15 @@ import re
 import random
 
 number_regexp = re.compile(r'^-?(\d)+(\.\d+)?$')
-abstract_regexp0 = re.compile(r'^([A-Z]+_)+\d+$')
-abstract_regexp1 = re.compile(r'^\d0*$')
 discard_regexp = re.compile(r'^n(\d+)?$')
 
 attr_value_set = set(['-', '+', 'interrogative', 'imperative', 'expressive'])
 
 def _is_attr_form(x):
     return (x in attr_value_set or x.endswith('_') or number_regexp.match(x) is not None)
-def _is_abs_form(x):
-    return (abstract_regexp0.match(x) is not None or abstract_regexp1.match(x) is not None)
-def is_attr_or_abs_form(x):
-    return _is_attr_form(x) or _is_abs_form(x)
+
 def need_an_instance(x):
-    return (not _is_attr_form(x) or (abstract_regexp0.match(x) is not None))
+    return (not _is_attr_form(x))
 
 class AMRGraph(object):
 
@@ -34,11 +29,8 @@ class AMRGraph(object):
         # will do some adjustments
         self.abstract_concepts = dict()
         for _, name, concept in instance_triple:
-            if is_attr_or_abs_form(concept):
-                if _is_abs_form(concept):
-                    self.abstract_concepts[name] = concept
-                else:
-                    print ('bad concept', _, name, concept)
+            if _is_attr_form(concept):
+                print ('bad concept', _, name, concept)
             self.name2concept[name] = concept
             self.nodes.add(name)
         for rel, concept, value in attribute_triple:
@@ -53,11 +45,8 @@ class AMRGraph(object):
                 continue
             name = "%s_attr_%d"%(value, len(self.name2concept))
             if not _is_attr_form(value):
-                if _is_abs_form(value):
-                    self.abstract_concepts[name] = value
-                else:
-                    print ('bad attribute', rel, concept, value)
-                    continue
+                print ('bad attribute', rel, concept, value)
+                continue
             self.name2concept[name] = value
             self._add_edge(rel, concept, name)
         for rel, head, tail in relation_triple:
@@ -66,8 +55,7 @@ class AMRGraph(object):
         # lower concept
         for name in self.name2concept:
             v = self.name2concept[name]
-            if not _is_abs_form(v):
-                v = v.lower()
+            v = v.lower()
             self.name2concept[name] = v
 
     def __len__(self):

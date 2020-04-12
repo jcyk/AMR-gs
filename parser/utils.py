@@ -66,3 +66,4 @@ def label_smoothed_nll_loss(log_probs, target, eps):
     eps_i = eps / log_probs.size(-1)
     loss = (1. - eps) * nll_loss + eps_i * smooth_loss
     return loss
+

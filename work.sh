@@ -1,6 +1,6 @@
-python3 -u -m parser.work --test_data data/AMR/amr_2.0_reca/test.txt.features.preproc \
+python3 -u -m parser.work --test_data ../data/AMR/amr_2.0/test.txt.features.preproc \
                --test_batch_size 6666 \
-               --load_path ../../ckpts/ckpt_bert_2_epoch103_batch54999 \
+               --load_path ../../ckpts/cleaned/ckpt_bert_nore_2_epoch126_batch55999.cleaned \
                --beam_size 8\
                --alpha 0.6\
                --max_time_step 100\

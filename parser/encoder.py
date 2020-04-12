@@ -4,6 +4,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import re
+
 from parser.transformer import Embedding
 
 def AMREmbedding(vocab, embedding_dim, pretrained_file=None, amr=False, dump_file=None):
@@ -205,8 +206,8 @@ class Highway(nn.Module):
 
 if __name__ == "__main__":
     from data import Vocab, CLS, DUM, END
-    vocab= Vocab('../data/AMR/amr_1.0_reca/lem_vocab', 3, [CLS])
-    embed = AMREmbedding(vocab, 300, pretrained_file='../data/glove.840B.300d.txt', dump_file='../data/AMR/amr_1.0_reca/glove_lem_embed')
-    vocab = Vocab('../data/AMR/amr_1.0_reca/concept_vocab', 3, [DUM, END])
-    embed = AMREmbedding(vocab, 300, pretrained_file='../data/glove.840B.300d.txt', amr=True, dump_file='../data/AMR/amr_1.0_reca/glove_concept_embed')
+    vocab= Vocab('../data/AMR/amr_1.0/lem_vocab', 3, [CLS])
+    embed = AMREmbedding(vocab, 300, pretrained_file='../data/glove.840B.300d.txt', dump_file='../data/AMR/amr_1.0/glove_lem_embed')
+    vocab = Vocab('../data/AMR/amr_1.0/concept_vocab', 3, [DUM, END])
+    embed = AMREmbedding(vocab, 300, pretrained_file='../data/glove.840B.300d.txt', amr=True, dump_file='../data/AMR/amr_1.0/glove_concept_embed')
 

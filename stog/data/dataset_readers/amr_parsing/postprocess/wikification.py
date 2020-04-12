@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from stog.data.dataset_readers.amr_parsing.io import AMRIO
 from stog.utils import logging
-
+import re
 
 logger = logging.init_logger()
 
@@ -52,27 +52,52 @@ class Wikification:
 
     def wikify_graph(self, amr):
         graph = amr.graph
-        abstract_map = amr.abstract_map
+        cached_wiki = self._spotlight_wiki[amr.sentence] if amr.sentence in self._spotlight_wiki else self.spotlight_wiki(amr.sentence)
         for node in graph.get_nodes():
-            instance = node.instance
-            if instance in abstract_map:
-                saved_dict = abstract_map[instance]
-                instance_type = saved_dict['type']
-                #!!! the following line has been changed by Deng Cai
-                cached_wiki = self._spotlight_wiki[amr.sentence] if amr.sentence in self._spotlight_wiki else self.spotlight_wiki(amr.sentence)
-                if instance_type == 'named-entity':
-                    self.name_node_count += 1
-                    wiki = '-'
-                    span = strip(saved_dict['span'])
-                    if span.lower() in self.nationality_map:
-                        country = self.nationality_map[span.lower()]
-                        wiki = self.wikify(country, cached_wiki)
-                    if wiki == '-':
-                        wiki = self.wikify(span, cached_wiki)
-                    if wiki == '-':
-                        span_no_space = joint_dash(span)
-                        wiki = self.wikify(span_no_space, cached_wiki)
-                    graph.set_name_node_wiki(node, wiki)
+            if graph.is_name_node(node):
+                edges = list(graph._G.in_edges(node))
+                name_head = None
+                for source, target in edges:
+                    if graph._G[source][target]['label'] == 'name':
+                        name_head = source
+                        break
+                for source, target in edges:
+                    label = graph._G[source][target]['label']
+                    if label != 'name':
+                        graph.remove_edge(source, target)
+                        graph.add_edge(source, name_head, label)
+
+        for node, _, _ in graph.get_list_node(replace_copy=False):
+            if node.copy_of is not None:
+                continue
+            if graph.is_name_node(node):
+                edges = list(graph._G.in_edges(node))
+                assert all(graph._G[s][t]['label'] == 'name' for s, t in edges)
+                self.name_node_count += 1
+                wiki = '-'
+                ops = []
+                for op in node.ops:
+                    op = str(op)
+                    if re.search(r'^".*"$', op):
+                        op = op[1:-1]
+                    ops.append(op)
+                span = ' '.join(ops)
+                cspan = ' '.join([ x.capitalize() for x in ops]) 
+                if span.lower() in self.nationality_map:
+                    country = self.nationality_map[span.lower()]
+                    wiki = self.wikify(country, cached_wiki)
+                if wiki == '-':
+                    wiki = self.wikify(span, cached_wiki)
+                if wiki == '-':
+                    wiki = self.wikify(cspan, cached_wiki)
+                if wiki == '-':
+                    span_no_space = joint_dash(span)
+                    wiki = self.wikify(span_no_space, cached_wiki)
+                if wiki == '-':
+                    span_no_space = joint_dash(cspan)
+                    wiki = self.wikify(span_no_space, cached_wiki)
+                #print (span, '=>', wiki)
+                graph.set_name_node_wiki(node, wiki)
 
     def wikify(self, text, cached_wiki=None):
         text = text.lower()
