@@ -30,7 +30,7 @@ The code has two branches:
 
 |           Model           | Link |
 | :-----------------------: | ---- |
-| AMR2.0+BERT+GR+Smatch80.2 |      |
+| AMR2.0+BERT+GR+Smatch80.2 |  [amr2.0.bert.gr.tar.gz](https://drive.google.com/open?id=1v1fEoJGIrpM6kRzY796nDy2Ju6eFLs9-)    |
 
 
 
