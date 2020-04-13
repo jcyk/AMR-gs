@@ -31,7 +31,7 @@ class Polite:
                     self.heads.append((i, i + 3))
                 elif i - 2 >= 0 and self.amr.lemmas[i - 2] == 'can':
                     self.heads.append((i, i - 2))
-                else:
+                elif i+1 <len(self.amr.tokens):
                     self.heads.append((i, i + 1))
 
     def restore_polite(self):

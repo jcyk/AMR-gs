@@ -52,7 +52,9 @@ class Wikification:
 
     def wikify_graph(self, amr):
         graph = amr.graph
-        cached_wiki = self._spotlight_wiki[amr.sentence] if amr.sentence in self._spotlight_wiki else self.spotlight_wiki(amr.sentence)
+        # !!! the following line has been changed by Deng Cai. If you can access dbpedia-spotlight,
+        # Change it back to cached_wiki = self._spotlight_wiki[amr.sentence] if amr.sentence in self._spotlight_wiki else self.spotlight_wiki(amr.sentence)
+        cached_wiki = self._spotlight_wiki[amr.sentence] if amr.sentence in self._spotlight_wiki else None #self.spotlight_wiki(amr.sentence)
         for node in graph.get_nodes():
             if graph.is_name_node(node):
                 edges = list(graph._G.in_edges(node))
@@ -148,6 +150,8 @@ class Wikification:
 
     @staticmethod
     def spotlight_wiki(sent, confidence=0.5):
+        #!!! This function has been changed by Deng Cai
+        logger.info('dbpedia-spotlight')
         success = False
         while not success:
             try:
@@ -161,6 +165,11 @@ class Wikification:
                 sleep(0.1)
                 continue
             success = True
+        #!!! the following lines have been changed by Deng Cai
+        success = spotlight.status_code == 200
+        if not success:
+            logger.info(spotlight)
+            return None
         parsed_spotlight = BeautifulSoup(spotlight.text, 'lxml')
         mention_map = {}
         for wiki_tag in parsed_spotlight.find_all('a'):
@@ -168,15 +177,17 @@ class Wikification:
         logger.info(mention_map)
         return mention_map
 
-    def dump_spotlight_wiki(self, file_path):
+    def dump_spotlight_wiki(self, amr_files):
+        #!!! This function has been changed by Deng Cai
         sent_map = {}
-        for i, amr in enumerate(AMRIO.read(file_path), 1):
-            if i % 20 == 0:
-                print('+', end='')
-            sent = amr.sentence
-            wiki = self.spotlight_wiki(sent)
-            sent_map[sent] = wiki
-            sleep(0.1)
+        for file_path in amr_files:
+            for i, amr in enumerate(AMRIO.read(file_path), 1):
+                if i % 20 == 0:
+                    print('+', end='')
+                sent = amr.sentence
+                wiki = self.spotlight_wiki(sent)
+                sent_map[sent] = wiki
+                sleep(0.1)
         with open(os.path.join(self.util_dir, 'spotlight_wiki.json'), 'w', encoding='utf-8') as f:
             json.dump(sent_map, f)
 
@@ -195,8 +206,7 @@ if __name__ == '__main__':
     wikification = Wikification(util_dir=args.util_dir)
 
     if args.dump_spotlight_wiki:
-        for file_path in args.amr_files:
-            wikification.dump_spotlight_wiki(file_path)
+        wikification.dump_spotlight_wiki(args.amr_files)
 
     else:
         wikification.load_utils()
