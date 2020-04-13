@@ -291,9 +291,13 @@ class Recategorizer:
 
     def recategorize_urls(self, amr):
         url = URL(amr)
-        url_count, recat_url_count = url.abstract()
-        self.url_count += url_count
-        self.recat_url_count += recat_url_count
+        try:
+            url_count, recat_url_count = url.abstract()
+            self.url_count += url_count
+            self.recat_url_count += recat_url_count
+        except Exception as e:
+            print (e)
+
 
     def _get_aligned_date(self, node, amr):
         date = Date(node, amr.graph)

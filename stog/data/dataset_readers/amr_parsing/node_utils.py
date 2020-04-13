@@ -249,8 +249,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser('node_utils.py')
     parser.add_argument('--amr_train_files', nargs='+', default=['data/all_amr/train_amr.txt.features'])
-    parser.add_argument('--propbank_dir', default='data/misc/propbank-frames-xml-2016-03-08/')
-    parser.add_argument('--verbalization_file', default='data/misc/verbalization-list-v1.06.txt')
+    parser.add_argument('--propbank_dir', default='data/AMR/amr_3.0/misc/propbank-frames-xml-2016-03-08')
+    parser.add_argument('--verbalization_file', default='data/AMR/amr_3.0/misc/verbalization-list-v1.06.txt')
     parser.add_argument('--dump_dir', default='./temp/')
     parser.add_argument('--train_file_base_freq', type=float, default=1)
     parser.add_argument('--propbank_base_freq', type=float, default=1)
