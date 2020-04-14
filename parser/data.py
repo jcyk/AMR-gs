@@ -162,7 +162,7 @@ class DataLoader(object):
         for amr, token, lemma, pos, ner in zip(*read_file(filename)):
             if for_train:
                 _, _, not_ok = amr.root_centered_sort()
-                if not_ok:
+                if not_ok or len(token)==0:
                     continue
             cp_seq, mp_seq, token2idx, idx2token = lex_map.get_concepts(lemma, token, vocabs['predictable_concept']) 
             datum = {'amr':amr, 'tok':token, 'lem':lemma, 'pos':pos, 'ner':ner, \
@@ -204,6 +204,11 @@ class DataLoader(object):
                 batches.append(data)
                 num_tokens, data = 0, []
         if data:
+            sz = len(data)* (2 + max(len(x['tok']) for x in data) + max(len(x['amr']) for x in data))
+            if sz > GPU_SIZE:
+                # because we only have limited GPU memory
+                batches.append(data[:len(data)//2])
+                data = data[len(data)//2:]
             batches.append(data)
 
         if self.train:

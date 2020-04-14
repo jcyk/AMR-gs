@@ -118,7 +118,7 @@ class URL:
         return count
 
     def remove_redundant_url(self):
-        while True:
+        while len(self.amr.lemmas)>1:
             for i in range(len(self.amr.lemmas)):
                 lemma = self.amr.lemmas[i]
                 if re.search('(https?:|<a.*href=|^</a>$)', lemma):

@@ -188,10 +188,10 @@ def main(local_rank, args):
             concept_loss_value = concept_loss.item()
             arc_loss_value = arc_loss.item()
             rel_loss_value = rel_loss.item()
-            loss_avg = loss_value * args.batches_per_update * 0.8 + 0.2 * loss_value
-            concept_loss_avg = concept_loss_value * 0.8 + 0.2 * concept_loss_value
-            arc_loss_avg = arc_loss_value * 0.8 + 0.2 * arc_loss_value
-            rel_loss_avg = rel_loss_value * 0.8 + 0.2 * rel_loss_value
+            loss_avg = loss_avg * args.batches_per_update * 0.8 + 0.2 * loss_value
+            concept_loss_avg = concept_loss_avg * 0.8 + 0.2 * concept_loss_value
+            arc_loss_avg = arc_loss_avg * 0.8 + 0.2 * arc_loss_value
+            rel_loss_avg = rel_loss_avg * 0.8 + 0.2 * rel_loss_value
             loss.backward()
             used_batches += 1
             if not (used_batches % args.batches_per_update == -1 % args.batches_per_update):
