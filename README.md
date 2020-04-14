@@ -2,23 +2,23 @@
 
 Code for our **ACL2020** paper, 
 
-**AMR Parsing via Graph-Sequence Iterative Inference** [[preprint]](https://www.aclweb.org/anthology/D19-1393.pdf)
+**AMR Parsing via Graph-Sequence Iterative Inference** [[preprint]](http://arxiv.org/abs/2004.05572)
 
 Deng Cai and Wai Lam.
 
 ## Requirements
 
-The code has been tested on **Python 3.6** and **PyTorch 1.2.0**.
+The code has been tested on **Python 3.6**.
 
-All other dependencies are listed in [requirements.txt](requirements.txt).
+All dependencies are listed in [requirements.txt](requirements.txt).
 
 The code has two branches:
 
 1. master branch corresponds to the experiments with graph recategorization
-2. no-recategorize branch corresponds to the experiments without graph recategorization
+2. [no-recategorize branch](https://github.com/jcyk/AMR-gs/tree/no-recategorize) corresponds to the experiments without graph recategorization
 
 ## AMR Parsing with Pretrained Models
-0. We are still working on a convenient API for parsing raw sentences. For now, a hacky solution is to convert to your input data into the same format as LDC files (see an example for the novel [*The Little Prince*](https://amr.isi.edu/download/amr-bank-struct-v3.0.txt)), you should wrap every sentence like this:
+0. We are still working on a convenient API for parsing raw sentences. For now, a hacky solution is to convert to your input data into the LDC format (e.g., the novel [*The Little Prince*](https://amr.isi.edu/download/amr-bank-struct-v3.0.txt) in LDC format), and pretend it as our test set. You should wrap every sentence like this:
 
    ```
    # ::id 0
@@ -81,12 +81,11 @@ It is recommended to use [fast smatch](./tools/fast_smatch) for model selection.
 
 For evaluation, following [Parsing with Pretrained Models](https://github.com/jcyk/stog#amr-parsing-with-pretrained-models) step 2-3, then `sh compute_smatch {load_path}{output_suffix}.pred.post data/AMR/amr_2.0/test.txt`
 
-### Acknowledgement
-
-We adopted the code snippets from [stog](https://github.com/sheng-z/stog) for data preprocessing.
 ## Notes
-1. The dbpedia-spotlight occasionally does not work for us. Therefore, we will not add wiki links to AMRs.
+
+1. We adopted the code snippets from [stog](https://github.com/sheng-z/stog) for data preprocessing.
+
+2. The dbpedia-spotlight occasionally does not work. Therefore, we have [diabaled it](https://github.com/jcyk/AMR-gs/blob/52d2a95cb3c654d2dcefdd2bc85c5d54b84c027d/stog/data/dataset_readers/amr_parsing/postprocess/wikification.py#L61-L63).
 
 ## Contact
 For any questions, please drop an email to [Deng Cai](https://jcyk.github.io/).
-
