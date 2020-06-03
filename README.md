@@ -75,7 +75,7 @@ The following instruction assumes that you're training on AMR 2.0 ([LDC2017T10](
 
 `sh train.sh data/AMR/amr_2.0`
 
-It is recommended to use [fast smatch](./tools/fast_smatch) for model selection.
+The training process will produce many checkpoints and the corresponding output on dev set. To select the best checkpoint, one can evaluate the dev output files (need to do postprocessing first). It is recommended to use [fast smatch](./tools/fast_smatch) for model selection.
 
 ### Evaluation
 
