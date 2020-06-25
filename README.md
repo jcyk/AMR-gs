@@ -36,7 +36,8 @@ The code has two branches:
 
 |           Model           | Link |
 | :-----------------------: | ---- |
-| AMR2.0+BERT+GR+Smatch80.2 |  [amr2.0.bert.gr.tar.gz](https://drive.google.com/open?id=1v1fEoJGIrpM6kRzY796nDy2Ju6eFLs9-)    |
+| AMR2.0+BERT+GR=Smatch80.2 |  [amr2.0.bert.gr.tar.gz](https://drive.google.com/open?id=1v1fEoJGIrpM6kRzY796nDy2Ju6eFLs9-)    |
+|AMR2.0+BERT=Smatch78.7|[amr2.0.bert.tar.gz](https://drive.google.com/file/d/1S-P6Y6c-_5-uzcqyX7-BixVUvFzN0MG9/view?usp=sharing) |
 
 ## Train New Parsers
 
