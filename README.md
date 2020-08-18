@@ -6,27 +6,27 @@ Code for our **ACL2020** paper,
 
 Deng Cai and Wai Lam.
 
-## Requirements
-
-The code has been tested on **Python 3.6**.
-
-All dependencies are listed in [requirements.txt](requirements.txt).
+## Introduction
 
 The code has two branches:
 
 1. master branch corresponds to the experiments with graph recategorization.
 2. [no-recategorize branch](https://github.com/jcyk/AMR-gs/tree/no-recategorize) corresponds to the experiments without graph recategorization.
 
+## Requirements
+
+The code has been tested on **Python 3.6**. All dependencies are listed in [requirements.txt](requirements.txt).
+
 ## AMR Parsing with Pretrained Models
-0. We are still working on a convenient API for parsing raw sentences. For now, a hacky solution is to convert to your input data into the LDC format (e.g., the novel [*The Little Prince*](https://amr.isi.edu/download/amr-bank-struct-v3.0.txt) in LDC format), and pretend it as our test set. You should wrap every sentence like this:
+0. We use [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/index.html) (version **3.9.2**) for lemmatizing, POS tagging, etc.
 
-   ```
-   # ::id 0
-   # ::snt This is a sentence. (d / dummy) is used as a placeholder.
-   (d / dummy)
-   ```
+    ```
+    sh run_standford_corenlp_server.sh
+    ```
 
-1. Data Preprocessing: [Data Preparation](https://github.com/jcyk/AMR-gs#data-preparation) step 3-4. 
+    The input file should constain the raw sentences to parse (one sentence per line).
+
+1. Data Preprocessing: `sh preprocess_raw.sh ${input_file}`
 
 2. `sh work.sh` => `{load_path}{output_suffix}.pred`
 
@@ -45,7 +45,7 @@ The following instruction assumes that you're training on AMR 2.0 ([LDC2017T10](
 
 ### Data Preparation
 
-0. unzip the corpus to `data/AMR/LDC2017T10`.
+0. Unzip the corpus to `data/AMR/LDC2017T10`.
 
 1. Prepare training/dev/test splits:
 
