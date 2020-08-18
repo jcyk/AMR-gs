@@ -32,13 +32,18 @@ python -u -m stog.data.dataset_readers.amr_parsing.preprocess.input_cleaner \
     --amr_files ${test_data}
 printf "Done.`date`\n\n"
 
+printf "Recategorizing subgraphs...`date`\n"
+python -u -m stog.data.dataset_readers.amr_parsing.preprocess.text_anonymizor \
+    --amr_file ${test_data}.input_clean \
+    --util_dir ${util_dir}
+printf "Done.`date`\n\n"
 
 printf "Removing senses...`date`\n"
 python -u -m stog.data.dataset_readers.amr_parsing.preprocess.sense_remover \
     --util_dir ${util_dir} \
-    --amr_files ${test_data}.input_clean
+    --amr_files ${test_data}.input_clean.recategorize
 printf "Done.`date`\n\n"
 
 printf "Renaming preprocessed files...`date`\n"
-mv ${test_data}.input_clean.nosense ${test_data}.preproc
+mv ${test_data}.input_clean.recategorize.nosense ${test_data}.preproc
 rm ${test_data}*.input_clean*
