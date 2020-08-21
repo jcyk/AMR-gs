@@ -13,9 +13,9 @@ raw_file=$1
 python prepare_raw.py ${raw_file}
 
 
-# python -u -m stog.data.dataset_readers.amr_parsing.preprocess.feature_annotator \
-#     ${raw_file}.raw \
-#     --compound_file ${compound_file}
+python -u -m stog.data.dataset_readers.amr_parsing.preprocess.feature_annotator \
+    ${raw_file}.raw \
+    --compound_file ${compound_file}
 
 
 # ############### AMR v2.0 ################
