@@ -26,7 +26,7 @@ The code has been tested on **Python 3.6**. All dependencies are listed in [requ
 
     The input file should constain the raw sentences to parse (one sentence per line).
 
-1. Data Preprocessing: `sh preprocess_raw.sh ${input_file}`
+1. Data Preprocessing: `sh preprocess_raw.sh ${input_file}` (when use graph recategorization, first download artifacts via ```sh download_artifacts.sh```)
 
 2. `sh work.sh` => `{load_path}{output_suffix}.pred`
 
