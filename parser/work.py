@@ -133,8 +133,8 @@ if __name__ == "__main__":
     another_test_data = DataLoader(vocabs, lexical_mapping, args.test_data, args.test_batch_size, for_train=False)
     for test_model in test_models:
         print (test_model)
-        batch = int(re.search(r'batch([0-9])+', test_model)[0][5:])
-        epoch = int(re.search(r'epoch([0-9])+', test_model)[0][5:])
+        #batch = int(re.search(r'batch([0-9])+', test_model)[0][5:])
+        #epoch = int(re.search(r'epoch([0-9])+', test_model)[0][5:])
         
         load_ckpt_without_bert(model, test_model)
         model = model.cuda()
